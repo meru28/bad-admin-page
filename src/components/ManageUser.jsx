@@ -42,30 +42,31 @@ class ManageUser extends Component {
 
   //merender list user
   renderListUser = () => {
-    var listJSXUser = this.state.listUser.map(
-      ({ _id, fullname, phone, verified, email, lastLogin }) => {
-        if (_id !== this.state.selectedIdEdit) {
-          return (
-            <tr key={_id}>
-              <td className="column1">{_id.substring(0, 2) + "..."}</td>
-              <td className="column2">{fullname}</td>
-              <td className="column3">{phone}</td>
-              <td className="column4">{verified}</td>
-              <td className="column5">{email}</td>
-              <td className="column6">{lastLogin}</td>
-              <td className="column7">
-                <input
-                  className="btn btn-danger"
-                  type="button"
-                  value="Delete"
-                  onClick={() => this.onBtnDeleteUser(_id)}
-                />
-              </td>
-            </tr>
-          );
-        }
+    var listJSXUser = this.state.listUser.map((item, index) => {
+      if (item._id !== this.state.selectedIdEdit) {
+        return (
+          <tr key={item._id}>
+            <th scope="row" style={{ textAlign: "center" }}>
+              {index + 1}
+            </th>
+            <td className="column1">{item._id.substring(0, 2) + "..."}</td>
+            <td className="column2">{item.fullname}</td>
+            <td className="column3">{item.phone}</td>
+            <td className="column4">{item.verified}</td>
+            <td className="column5">{item.email}</td>
+            <td className="column6">{item.lastLogin}</td>
+            <td className="column7">
+              <input
+                className="btn btn-danger"
+                type="button"
+                value="Delete"
+                onClick={() => this.onBtnDeleteUser(item._id)}
+              />
+            </td>
+          </tr>
+        );
       }
-    );
+    });
     return listJSXUser;
   };
 
@@ -89,6 +90,7 @@ class ManageUser extends Component {
                 <table>
                   <thead>
                     <tr className="table100-head">
+                      <th className="column0">No.</th>
                       <th className="column1">ID</th>
                       <th className="column2">Nama User</th>
                       <th className="column3">Telp</th>
