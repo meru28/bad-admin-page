@@ -1,28 +1,38 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ListGroup,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Input
+} from "reactstrap";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
+import { FiEdit } from "react-icons/fi";
 import "../support/css-modal-addproduct/main.css";
 import "../support/css-modal-addproduct/main.min.css";
 
 class ModalEditProduct extends Component {
   state = {
     modal: false,
-    judul: "",
-    harga: "",
-    caraPakai: "",
-    imageUrl: "",
-    imageUrl1: "",
-    storageInfo: "",
-    stock: "",
-    merk: "",
-    deskripsi: ""
+    judul: this.props.modalValue.judul,
+    harga: this.props.modalValue.harga,
+    caraPakai: this.props.modalValue.caraPakai,
+    imageUrl: this.props.modalValue.imageUrl,
+    imageUrl1: this.props.modalValue.imageUrl1,
+    storageInfo: this.props.modalValue.storageInfo,
+    stock: this.props.modalValue.stock,
+    merk: this.props.modalValue.merk,
+    deskripsi: this.props.modalValue.deskripsi
   };
 
   toggle = () => {
-    this.setState(prevState => ({
-      modal: !prevState.modal
-    }));
+    this.setState({ modal: !this.state.modal });
   };
 
   handleChange = event => {
@@ -31,43 +41,21 @@ class ModalEditProduct extends Component {
     this.setState({ [name]: value });
   };
 
-  //handle setelah klik tombol add
-  handleAddSubmit = event => {
-    event.preventDefault();
-    var {
-      judul,
-      harga,
-      caraPakai,
-      imageUrl,
-      imageUrl1,
-      storageInfo,
-      stock,
-      merk,
-      deskripsi
-    } = this.state;
-    console.log(`
--- SUBMITTING --
-${judul}
-${harga}
-${caraPakai}
-${imageUrl}
-${imageUrl1}
-${storageInfo}
-${stock}
-${merk}
-${deskripsi}`);
-    // this.props.addProduct({
-    //   judul,
-    //   harga,
-    //   caraPakai,
-    //   imageUrl,
-    //   storageInfo,
-    //   stock,
-    //   merk,
-    //   deskripsi
-    // });
+  // prettier-ignore
+  onSubmit = (_id, judul, harga, caraPakai, imageUrl, imageUrl1, storageInfo, stock, deskripsi) => {
+    // console.log(`
+    // -- SUBMITTING --
+    // ${judul}
+    // ${harga}
+    // ${caraPakai}
+    // ${imageUrl}
+    // ${imageUrl1}
+    // ${storageInfo}
+    // ${stock}
+    // ${deskripsi}
+    // `);
     axios
-      .post("http://localhost:1990/product/addproduct", {
+      .post("http://localhost:1990/product/" + _id, {
         judul,
         harga,
         caraPakai,
@@ -78,8 +66,12 @@ ${deskripsi}`);
         deskripsi
       })
       .then(res => {
-        alert(`Sukses Tambah Product ${this.state.judul}`);
-        this.toggle();
+        // alert(`Sukses update Product ${this.state.judul}`);
+        console.log(res);
+        this.setState({ modal: !this.state.modal });
+      })
+      .then(() => {
+        window.location.reload(true);
       })
       .catch(err => {
         console.log(err);
@@ -87,170 +79,157 @@ ${deskripsi}`);
   };
 
   render() {
+    const {
+      judul,
+      harga,
+      caraPakai,
+      imageUrl,
+      imageUrl1,
+      storageInfo,
+      stock,
+      deskripsi
+    } = this.state;
+    const { _id } = this.props.modalValue;
     if (this.state.judul !== 0) {
+      console.log(this.state.judul);
       return (
         <div>
-          <Button color="primary" onClick={this.toggle}>
-            {this.props.buttonLabel}
+          <Button color="primary" size="sm" onClick={this.toggle}>
+            <FiEdit />
           </Button>
           <Modal
             isOpen={this.state.modal}
             toggle={this.toggle}
             className={this.props.className}
-            style={{ width: "750px" }}
           >
-            <ModalHeader toggle={this.toggle}>Tambah Product Obat</ModalHeader>
+            <ModalHeader toggle={this.toggle}>
+              <span style={{ textAlign: "center" }}>
+                <h2>Edit Product</h2>
+                <br />
+              </span>
+              <span style={{ fontWeight: "bolder", color: "red" }}>
+                {this.props.modalValue.judul} - (id:{" "}
+                {_id.substring(0, 2) + "..."})
+              </span>
+            </ModalHeader>
             <ModalBody>
-              <div className="wrapper wrapper--w790">
-                <div className="card card-5">
-                  <div className="card-body">
-                    <form method="POST">
-                      <div className="form-row">
-                        <div className="name">Nama Obat</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="judul"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Harga</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="harga"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Cara Pakai</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="caraPakai"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Gambar 1</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="imageUrl"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Gambar 2</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="imageUrl1"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Penyimpanan</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="storageInfo"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Stock</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <input
-                                className="input--style-5"
-                                type="text"
-                                name="stock"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-row">
-                        <div className="name">Deskripsi</div>
-                        <div className="value">
-                          <div className="row row-space">
-                            <div className="input-group-desc">
-                              <textarea
-                                className="input--style-5"
-                                type="text"
-                                name="deskripsi"
-                                onChange={this.handleChange}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="form-row">
-                        <div className="name">Subject</div>
-                        <div className="value">
-                          <div className="input-group">
-                            <div className="rs-select2 js-select-simple select--no-search">
-                              <select name="subject">
-                                <option disabled="disabled" selected="selected">
-                                  Choose option
-                                </option>
-                                <option>Subject 1</option>
-                                <option>Subject 2</option>
-                                <option>Subject 3</option>
-                              </select>
-                              <div className="select-dropdown" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
+              <ListGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Nama Obat</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder={"default: " + this.props.modalValue.judul}
+                    value={judul}
+                    name="judul"
+                    onChange={this.handleChange}
+                    className="input--style-5"
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Harga</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder={"default: " + this.props.modalValue.harga}
+                    value={harga}
+                    name="harga"
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Penggunaan</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder={"default: " + this.props.modalValue.caraPakai}
+                    value={caraPakai}
+                    name="caraPakai"
+                    onChange={this.handleChange}
+                    className="input--style-5"
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Gambar 1</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder={"default: " + this.props.modalValue.imageUrl}
+                    value={imageUrl}
+                    name="imageUrl"
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Gambar 2</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder={"default: " + this.props.modalValue.imageUrl1}
+                    value={imageUrl1}
+                    name="imageUrl1"
+                    onChange={this.handleChange}
+                    className="input--style-5"
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Penyimpanan</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    type="textarea"
+                    placeholder={
+                      "default: " + this.props.modalValue.storageInfo
+                    }
+                    name="storageInfo"
+                    value={storageInfo}
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Stock</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    type="number"
+                    placeholder={"default: " + this.props.modalValue.stock}
+                    value={stock}
+                    name="stock"
+                    onChange={this.handleChange}
+                    className="input--style-5"
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Deskripsi</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    type="textarea"
+                    placeholder={"default: " + this.props.modalValue.deskripsi}
+                    value={deskripsi}
+                    name="deskripsi"
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+              </ListGroup>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={this.handleAddSubmit}>
+              <Button
+                color="primary"
+                onClick={() =>
+                  this.onSubmit(
+                    _id,
+                    judul,
+                    harga,
+                    caraPakai,
+                    imageUrl,
+                    imageUrl1,
+                    storageInfo,
+                    stock,
+                    deskripsi
+                  )
+                }
+              >
                 Accept
               </Button>{" "}
               <Button color="secondary" onClick={this.toggle}>
