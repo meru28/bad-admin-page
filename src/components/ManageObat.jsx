@@ -161,15 +161,18 @@ ${deskripsi}`);
 
   //merender list obat
   renderBodyObat = () => {
-    var listJSXObat = this.state.listObat.map(item => {
+    var listJSXObat = this.state.listObat.map((item, index) => {
       if (item._id !== this.state.selectedIdEdit) {
         return (
           <tr key={item._id}>
+            <th scope="row" style={{ textAlign: "center" }}>
+              {index + 1}
+            </th>
             <td className="column1">{item._id.substring(0, 2) + "..."}</td>
-            <td className="column2">{item.judul.substring(0, 5) + "..."}</td>
+            <td className="column2">{item.judul.substring(0, 10) + "..."}</td>
             <td className="column3">Rp. {item.harga}</td>
             <td className="column4">
-              {item.caraPakai.substring(0, 10) + "..."}
+              {item.caraPakai.substring(0, 5) + "..."}
             </td>
             <td className="column5">
               <img src={item.imageUrl} width="30px" alt={item._id} />
@@ -186,13 +189,13 @@ ${deskripsi}`);
               {item.deskripsi.substring(0, 20) + "..."}
             </td>
             <td className="column11">
-              <input
+              {/* <input
                 className="btn btn-primary"
                 type="button"
                 value="Edit"
                 onClick={() => this.setState({ selectedIdEdit: item._id })}
-              />
-              {/* <ModalEditProduct buttonLabel="Edit" /> */}
+              /> */}
+              <ModalEditProduct modalValue={item} />
             </td>
             <td className="column12">
               <input
@@ -280,12 +283,12 @@ ${deskripsi}`);
             />
           </td>
           <td className="column11">
-            <input
+            {/* <input
               className="btn btn-primary"
               type="button"
               value="Save"
               onClick={() => this.onBtnSaveClick(item._id)}
-            />
+            /> */}
           </td>
           <td className="column12">
             <input
@@ -323,6 +326,7 @@ ${deskripsi}`);
                 <table>
                   <thead>
                     <tr className="table100-head">
+                      <th className="column0">No.</th>
                       <th className="column1">ID</th>
                       <th className="column2">Nama Obat</th>
                       <th className="column3">Harga</th>
