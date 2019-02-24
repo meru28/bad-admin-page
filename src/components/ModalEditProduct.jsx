@@ -216,6 +216,7 @@ class ModalEditProduct extends Component {
             <ModalFooter>
               <Button
                 color="primary"
+                size="sm"
                 onClick={() =>
                   this.onSubmit(
                     _id,
@@ -230,9 +231,9 @@ class ModalEditProduct extends Component {
                   )
                 }
               >
-                Accept
+                Confirm Changes
               </Button>{" "}
-              <Button color="secondary" onClick={this.toggle}>
+              <Button color="secondary" size="sm" onClick={this.toggle}>
                 Cancel
               </Button>
             </ModalFooter>

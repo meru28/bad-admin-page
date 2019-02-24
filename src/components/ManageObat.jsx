@@ -10,14 +10,6 @@ import "../support/css-table/util.css";
 class ManageObat extends Component {
   state = {
     judul: "",
-    harga: "",
-    caraPakai: "",
-    imageUrl: "",
-    imageUrl1: "",
-    storageInfo: "",
-    stock: "",
-    merk: "",
-    deskripsi: "",
     listObat: [],
     selectedIdEdit: 0
   };
@@ -39,69 +31,8 @@ class ManageObat extends Component {
       });
   };
 
-  //handle perubahan inputan user
-  handleChange = event => {
-    event.preventDefault();
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  //handle setelah klik tombol add
-  handleAddSubmit = event => {
-    event.preventDefault();
-    var {
-      judul,
-      harga,
-      caraPakai,
-      imageUrl,
-      imageUrl1,
-      storageInfo,
-      stock,
-      merk,
-      deskripsi
-    } = this.state;
-    console.log(`
--- SUBMITTING --
-${judul}
-${harga}
-${caraPakai}
-${imageUrl}
-${imageUrl1}
-${storageInfo}
-${stock}
-${merk}
-${deskripsi}`);
-    // this.props.addProduct({
-    //   judul,
-    //   harga,
-    //   caraPakai,
-    //   imageUrl,
-    //   storageInfo,
-    //   stock,
-    //   merk,
-    //   deskripsi
-    // });
-    axios
-      .post("http://localhost:1990/product/addproduct", {
-        judul,
-        harga,
-        caraPakai,
-        imageUrl,
-        imageUrl1,
-        storageInfo,
-        stock,
-        deskripsi
-      })
-      .then(res => {
-        this.getListObat();
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
   onBtnDeleteClick = id => {
-    if (window.confirm("Yakin nih bro?")) {
+    if (window.confirm("Yakin hapus product ini bro?")) {
       axios
         .delete("http://localhost:1990/product/" + id)
         .then(res => {
@@ -115,187 +46,41 @@ ${deskripsi}`);
     }
   };
 
-  //handle perubahan obat
-  onBtnSaveClick = id => {
-    var {
-      judul,
-      harga,
-      caraPakai,
-      imageUrl,
-      imageUrl1,
-      storageInfo,
-      stock,
-      merk,
-      deskripsi
-    } = this.state;
-    console.log(`
-    -- SUBMITTING --
-    ${judul}
-    ${harga}
-    ${caraPakai}
-    ${imageUrl}
-    ${imageUrl1}
-    ${storageInfo}
-    ${stock}
-    ${merk}
-    ${deskripsi}`);
-    axios
-      .post("http://localhost:1990/product/" + id, {
-        judul,
-        harga,
-        caraPakai,
-        imageUrl,
-        imageUrl1,
-        storageInfo,
-        stock,
-        deskripsi
-      })
-      .then(res => {
-        this.getListObat();
-        alert(`Sukses update product!`);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
   //merender list obat
   renderBodyObat = () => {
     var listJSXObat = this.state.listObat.map((item, index) => {
-      if (item._id !== this.state.selectedIdEdit) {
-        return (
-          <tr key={item._id}>
-            <th scope="row" style={{ textAlign: "center" }}>
-              {index + 1}
-            </th>
-            <td className="column1">{item._id.substring(0, 2) + "..."}</td>
-            <td className="column2">{item.judul.substring(0, 10) + "..."}</td>
-            <td className="column3">Rp. {item.harga}</td>
-            <td className="column4">
-              {item.caraPakai.substring(0, 5) + "..."}
-            </td>
-            <td className="column5">
-              <img src={item.imageUrl} width="30px" alt={item._id} />
-            </td>
-            <td className="column6">
-              <img src={item.imageUrl1} width="30px" alt={item._id} />
-            </td>
-            <td className="column7">
-              {item.storageInfo.substring(0, 10) + "..."}
-            </td>
-            <td className="column8">{item.stock}</td>
-            <td className="column9">{item.merk}</td>
-            <td className="column10">
-              {item.deskripsi.substring(0, 20) + "..."}
-            </td>
-            <td className="column11">
-              {/* <input
-                className="btn btn-primary"
-                type="button"
-                value="Edit"
-                onClick={() => this.setState({ selectedIdEdit: item._id })}
-              /> */}
-              <ModalEditProduct modalValue={item} />
-            </td>
-            <td className="column12">
-              <input
-                className="btn btn-danger"
-                type="button"
-                value="Delete"
-                onClick={() => this.onBtnDeleteClick(item._id)}
-              />
-            </td>
-          </tr>
-        );
-      }
       return (
-        <tr>
-          <td className="column1">{item._id}</td>
-          <td className="column2">
-            <input
-              type="text"
-              defaultValue={item.judul}
-              name="judul"
-              onChange={this.handleChange}
-            />
-          </td>
-          <td className="column3">
-            <input
-              type="number"
-              defaultValue={item.harga}
-              name="harga"
-              onChange={this.handleChange}
-            />
-          </td>
-          <td className="column4">
-            <input
-              type="text"
-              defaultValue={item.caraPakai}
-              name="caraPakai"
-              onChange={this.handleChange}
-            />
-          </td>
+        <tr key={item._id}>
+          <th scope="row" style={{ textAlign: "center" }}>
+            {index + 1}
+          </th>
+          <td className="column1">{item._id.substring(0, 2) + "..."}</td>
+          <td className="column2">{item.judul.substring(0, 10) + "..."}</td>
+          <td className="column3">Rp. {item.harga}</td>
+          <td className="column4">{item.caraPakai.substring(0, 5) + "..."}</td>
           <td className="column5">
-            <input
-              type="text"
-              defaultValue={item.imageUrl}
-              name="imageUrl"
-              onChange={this.handleChange}
-            />
+            <img src={item.imageUrl} width="30px" alt={item._id} />
           </td>
           <td className="column6">
-            <input
-              type="text"
-              defaultValue={item.imageUrl1}
-              name="imageUrl1"
-              onChange={this.handleChange}
-            />
+            <img src={item.imageUrl1} width="30px" alt={item._id} />
           </td>
           <td className="column7">
-            <input
-              type="text"
-              defaultValue={item.storageInfo}
-              name="storageInfo"
-              onChange={this.handleChange}
-            />
+            {item.storageInfo.substring(0, 10) + "..."}
           </td>
-          <td className="column8">
-            <input
-              type="number"
-              defaultValue={item.stock}
-              name="stock"
-              onChange={this.handleChange}
-            />
-          </td>
-          <td className="column9">
-            <select ref="merkEdit" defaultValue={item.merk}>
-              <option>Bronson</option>
-              <option>Uchiha</option>
-              <option>Bunting</option>
-            </select>
-          </td>
+          <td className="column8">{item.stock}</td>
+          <td className="column9">{item.merk}</td>
           <td className="column10">
-            <textarea
-              type="text"
-              defaultValue={item.deskripsi}
-              name="deskripsi"
-              onChange={this.handleChange}
-            />
+            {item.deskripsi.substring(0, 20) + "..."}
           </td>
           <td className="column11">
-            {/* <input
-              className="btn btn-primary"
-              type="button"
-              value="Save"
-              onClick={() => this.onBtnSaveClick(item._id)}
-            /> */}
+            <ModalEditProduct modalValue={item} />
           </td>
           <td className="column12">
             <input
               className="btn btn-danger"
               type="button"
-              value="Cancel"
-              onClick={() => this.setState({ selectedIdEdit: 0 })}
+              value="Delete"
+              onClick={() => this.onBtnDeleteClick(item._id)}
             />
           </td>
         </tr>
